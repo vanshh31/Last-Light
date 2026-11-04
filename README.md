@@ -96,8 +96,7 @@ Last-Light/
 
 ## 🌐 Play the Game
 
-**Play LAST LIGHT on itch.io:** https://vanshh31.itch.io/last-light
-
+[**Play LAST LIGHT on itch.io →**](https://vanshh31.itch.io/last-light)
 ---
 
 ## 👨‍💻 Development
