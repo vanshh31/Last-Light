@@ -35,21 +35,6 @@
 | W / A / S / D | Move |
 | Automatic | Targeting and combat |
 
-## 📸 Screenshots
-
-<!-- Replace these placeholders with your own screenshots. -->
-
-### Main Menu
-![Main Menu](Screenshots/main-menu.png)
-
-### Gameplay
-![Gameplay](Screenshots/gameplay.png)
-
-### Upgrade System
-![Upgrade System](Screenshots/upgrade-system.png)
-
-### Game Over
-![Game Over](Screenshots/game-over.png)
 
 ## 🛠️ Built With
 
