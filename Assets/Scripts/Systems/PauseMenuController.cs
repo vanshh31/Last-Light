@@ -57,6 +57,8 @@ public class PauseMenuController : MonoBehaviour
         if (!isPaused)
             return;
 
+        PlayButtonClick();
+
         isPaused = false;
 
         if (pausePanel != null)
@@ -70,6 +72,8 @@ public class PauseMenuController : MonoBehaviour
 
     public void RestartGame()
     {
+        PlayButtonClick();
+
         Time.timeScale = 1f;
         GamePauseState.ResetState();
 
@@ -80,6 +84,8 @@ public class PauseMenuController : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        PlayButtonClick();
+
         Time.timeScale = 1f;
         GamePauseState.ResetState();
 
@@ -88,9 +94,17 @@ public class PauseMenuController : MonoBehaviour
 
     public void QuitGame()
     {
+        PlayButtonClick();
+
         Time.timeScale = 1f;
         GamePauseState.ResetState();
 
         Application.Quit();
+    }
+
+    private void PlayButtonClick()
+    {
+        if (SFXManager.Instance != null)
+            SFXManager.Instance.PlayButtonClick();
     }
 }
