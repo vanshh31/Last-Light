@@ -76,7 +76,19 @@ public class SFXManager : MonoBehaviour
     }
 
     // Combat
-    public void PlayProjectileFire() => PlaySound(projectileFire);
+    [Header("Sound Intervals")]
+    [SerializeField] private float projectileSoundInterval = 2.25f;
+
+    private float lastProjectileSoundTime = -Mathf.Infinity;
+
+    public void PlayProjectileFire()
+    {
+        if (Time.time - lastProjectileSoundTime < projectileSoundInterval)
+            return;
+
+        PlaySound(projectileFire);
+        lastProjectileSoundTime = Time.time;
+    }
     public void PlayEnemyHit() => PlaySound(enemyHit);
     public void PlayEnemyDeath() => PlaySound(enemyDeath);
 
@@ -110,6 +122,25 @@ public class SFXManager : MonoBehaviour
     [ContextMenu("Test SFX")]
     private void TestSFX()
     {
-        PlaySound(buttonClick);
+        Debug.Log(
+            $"SFX Test — Clip: {buttonClick}, " +
+            $"AudioSource: {audioSource}, " +
+            $"Enabled: {audioSource != null && audioSource.enabled}"
+        );
+
+        if (audioSource == null)
+        {
+            Debug.LogError("SFXManager: AudioSource is missing!");
+            return;
+        }
+
+        if (buttonClick == null)
+        {
+            Debug.LogError("SFXManager: Button Click clip is not assigned!");
+            return;
+        }
+
+        audioSource.PlayOneShot(buttonClick);
+        Debug.Log("SFXManager: PlayOneShot called.");
     }
 }

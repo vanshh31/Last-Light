@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -22,22 +23,24 @@ public class UpgradeMenuController : MonoBehaviour
 
     private void Start()
     {
-        Time.timeScale = 1f;
         isMenuOpen = false;
-        upgradePanel.SetActive(false);
+
+        if (upgradePanel != null)
+            upgradePanel.SetActive(false);
+
+        GamePauseState.SetUpgradeMenu(false);
+
         RefreshMenu();
     }
 
     private void Update()
     {
+        if (GamePauseState.GameOver)
+            return;
+
         if (Input.GetKeyDown(KeyCode.U))
         {
             ToggleMenu();
-        }
-
-        if (isMenuOpen && Input.GetKeyDown(KeyCode.Escape))
-        {
-            CloseMenu();
         }
 
         if (isMenuOpen)
@@ -56,14 +59,20 @@ public class UpgradeMenuController : MonoBehaviour
 
     public void OpenMenu()
     {
-        if (isMenuOpen)
+        if (isMenuOpen || GamePauseState.GameOver)
             return;
 
         isMenuOpen = true;
 
-        upgradePanel.SetActive(true);
+        if (upgradePanel != null)
+            upgradePanel.SetActive(true);
 
-        Time.timeScale = 0f;
+        GamePauseState.SetUpgradeMenu(true);
+
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayUpgradeMenuOpen();
+        }
 
         RefreshMenu();
     }
@@ -75,36 +84,65 @@ public class UpgradeMenuController : MonoBehaviour
 
         isMenuOpen = false;
 
-        upgradePanel.SetActive(false);
+        if (upgradePanel != null)
+            upgradePanel.SetActive(false);
 
-        Time.timeScale = 1f;
+        GamePauseState.SetUpgradeMenu(false);
+
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayUpgradeMenuClose();
+        }
     }
 
     public void BuyDamageUpgrade()
     {
+        if (playerEnergy == null || playerCombat == null)
+            return;
+
         if (!playerEnergy.SpendEnergy(upgradeCost))
             return;
 
         playerCombat.UpgradeDamage();
+
+        PlayPurchaseSound();
         RefreshMenu();
     }
 
     public void BuyFireRateUpgrade()
     {
+        if (playerEnergy == null || playerCombat == null)
+            return;
+
         if (!playerEnergy.SpendEnergy(upgradeCost))
             return;
 
         playerCombat.UpgradeFireRate();
+
+        PlayPurchaseSound();
         RefreshMenu();
     }
 
     public void BuyRangeUpgrade()
     {
+        if (playerEnergy == null || playerCombat == null)
+            return;
+
         if (!playerEnergy.SpendEnergy(upgradeCost))
             return;
 
         playerCombat.UpgradeRange();
+
+        PlayPurchaseSound();
         RefreshMenu();
+    }
+
+    private void PlayPurchaseSound()
+    {
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayUpgradePurchase();
+        }
     }
 
     private void RefreshMenu()
@@ -133,8 +171,8 @@ public class UpgradeMenuController : MonoBehaviour
     {
         if (isMenuOpen)
         {
-            Time.timeScale = 1f;
             isMenuOpen = false;
+            GamePauseState.SetUpgradeMenu(false);
         }
     }
 }

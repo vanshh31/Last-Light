@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 
@@ -33,6 +34,8 @@ public class WaveManager : MonoBehaviour
 
         ApplyWaveDifficulty();
         UpdateWaveUI();
+
+        PlayWaveStartSound();
     }
 
     private void Update()
@@ -54,6 +57,8 @@ public class WaveManager : MonoBehaviour
         UpdateWaveUI();
 
         Debug.Log("WAVE " + currentWave + " STARTED!");
+
+        PlayWaveStartSound();
     }
 
     private void ApplyWaveDifficulty()
@@ -82,6 +87,14 @@ public class WaveManager : MonoBehaviour
         if (waveText != null)
         {
             waveText.text = "WAVE " + currentWave;
+        }
+    }
+
+    private void PlayWaveStartSound()
+    {
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayWaveStart();
         }
     }
 }

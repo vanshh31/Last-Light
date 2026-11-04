@@ -50,6 +50,13 @@ public class EnergyPickup : MonoBehaviour
         if (playerEnergy != null)
         {
             playerEnergy.AddEnergy(energyValue);
+
+            // Play energy pickup sound.
+            if (SFXManager.Instance != null)
+            {
+                SFXManager.Instance.PlayEnergyPickup();
+            }
+
             Destroy(gameObject);
         }
     }

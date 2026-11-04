@@ -42,6 +42,21 @@ public class Projectile : MonoBehaviour
             if (enemyHealth != null)
             {
                 enemyHealth.TakeDamage(damage);
+
+                PlayerCombat playerCombat =
+    FindFirstObjectByType<PlayerCombat>();
+
+                if (playerCombat != null)
+                {
+                    playerCombat.ApplyHitCooldown();
+                }
+
+                // Play enemy hit sound.
+                if (SFXManager.Instance != null)
+                {
+                    SFXManager.Instance.PlayEnemyHit();
+                }
+
                 Destroy(gameObject);
             }
         }

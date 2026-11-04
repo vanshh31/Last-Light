@@ -8,15 +8,25 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float fireRate = 1f;
     [SerializeField] private int attackDamage = 1;
 
+    [Header("Hit Cooldown")]
+    [SerializeField] private float hitCooldown = 2.25f;
+
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
 
     private float fireTimer;
+    private float hitCooldownTimer;
 
     private void Update()
     {
         fireTimer += Time.deltaTime;
+
+        if (hitCooldownTimer > 0f)
+        {
+            hitCooldownTimer -= Time.deltaTime;
+            return;
+        }
 
         if (fireTimer >= fireRate)
         {
@@ -57,23 +67,30 @@ public class PlayerCombat : MonoBehaviour
 
         return nearestEnemy;
     }
+
     public void UpgradeDamage()
-{
-    attackDamage += 1;
-    Debug.Log("Damage upgraded! Current damage: " + attackDamage);
-}
+    {
+        attackDamage += 1;
+        Debug.Log("Damage upgraded! Current damage: " + attackDamage);
+    }
 
-public void UpgradeFireRate()
-{
-    fireRate = Mathf.Max(0.25f, fireRate * 0.85f);
-    Debug.Log("Fire rate upgraded! Current delay: " + fireRate);
-}
+    public void UpgradeFireRate()
+    {
+        fireRate = Mathf.Max(0.25f, fireRate * 0.85f);
+        Debug.Log("Fire rate upgraded! Current delay: " + fireRate);
+    }
 
-public void UpgradeRange()
-{
-    attackRange += 1f;
-    Debug.Log("Attack range upgraded! Current range: " + attackRange);
-}
+    public void UpgradeRange()
+    {
+        attackRange += 1f;
+        Debug.Log("Attack range upgraded! Current range: " + attackRange);
+    }
+
+    public void ApplyHitCooldown()
+    {
+        hitCooldownTimer = hitCooldown;
+    }
+
     private void ShootAtTarget(Transform target)
     {
         if (projectilePrefab == null)
@@ -99,6 +116,10 @@ public void UpgradeRange()
         {
             projectileScript.Initialize(direction, attackDamage);
         }
-    }
 
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayProjectileFire();
+        }
+    }
 }

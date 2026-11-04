@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -13,37 +14,64 @@ public class GameManager : MonoBehaviour
     private float survivalTime;
     private bool gameEnded;
 
+    private void Awake()
+    {
+        GamePauseState.ResetState();
+    }
+
     private void Update()
     {
         if (gameEnded)
             return;
 
-        survivalTime += Time.deltaTime;
+        if (playerHealth == null)
+            return;
 
         if (playerHealth.CurrentHealth <= 0)
+        {
             GameOver();
+            return;
+        }
+
+        survivalTime += Time.deltaTime;
     }
 
     private void GameOver()
     {
+        if (gameEnded)
+            return;
+
         gameEnded = true;
 
-        Time.timeScale = 0f;
+        GamePauseState.SetGameOver(true);
 
-        hudPanel.SetActive(false);
-        gameOverPanel.SetActive(true);
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayGameOver();
+        }
+
+        if (hudPanel != null)
+            hudPanel.SetActive(false);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
 
         int minutes = Mathf.FloorToInt(survivalTime / 60);
         int seconds = Mathf.FloorToInt(survivalTime % 60);
 
-        finalTimeText.text =
-            "SURVIVAL TIME: " +
-            string.Format("{0:00}:{1:00}", minutes, seconds);
+        if (finalTimeText != null)
+        {
+            finalTimeText.text =
+                "SURVIVAL TIME: " +
+                string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
     }
 
     public void RestartGame()
     {
         Time.timeScale = 1f;
+
+        GamePauseState.ResetState();
 
         SceneManager.LoadScene(
             SceneManager.GetActiveScene().buildIndex

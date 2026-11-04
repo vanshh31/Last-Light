@@ -38,6 +38,13 @@ public class EnemyHealth : MonoBehaviour
 
         isDead = true;
 
+        // Play enemy death sound.
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayEnemyDeath();
+        }
+
+        // Spawn energy pickup.
         if (energyPickupPrefab != null)
         {
             GameObject pickup = Instantiate(
